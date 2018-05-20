@@ -20,9 +20,31 @@ vector<int> insertSort(const vector<int>& array){
     return res;
 }
 
+void _qsort(vector<int>& array, int left, int right){
+    if(left>=right)
+        return;
+    int x=array[left];
+    int i=left, j=right;
+    while(i<j){
+        // res[i] to be filled
+        while(i<j && array[j]>x){
+            j--;
+        }
+        array[i]=array[j];
+        // res[j] to be filled
+        while(i<j && array[i]<x){
+            i++;
+        }
+        array[j]=array[i];
+    }
+    // now i==j
+    array[i]=x;
+    _qsort(array,left,i-1);
+    _qsort(array,i+1,right);
+}
 vector<int> quickSort(const vector<int>& array){
     vector<int> res(array);
-
+    _qsort(res, 0, res.size()-1);
     return res;
 }
 
@@ -44,7 +66,10 @@ vector<int> mergeSort(const vector<int>& array){
     return res;
 }
 
-vector<int> countingSort(const vector<int>& array){    
+vector<int> countingSort(const vector<int>& array){
+    vector<int> res(array);
+    if(!array.size())
+        return res;
     // get max and min value, to determine the size of the result array and counter array
     int min=array[0], max=array[0];
     std::for_each(array.begin(), array.end(), [&min,&max](int a){
@@ -52,7 +77,7 @@ vector<int> countingSort(const vector<int>& array){
         max=std::max(max,a);
     });
     // create 2 arrays: res and counter
-    vector<int> res, counter;
+    vector<int> counter;
     counter.resize(max-min+1); // [0,0,...,0]
     // count the occurrences of each element
     for(int i=0;i<(int)array.size();i++){
