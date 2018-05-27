@@ -84,7 +84,7 @@ vector<int> solve2(const vector<vector<int>>& graph){
             int parent=s.top();
             s.pop();;
             assert(color[parent]);
-            for(int child=0;child<graph[parent].size();child++){
+            for(int child=0;child<(int)graph[parent].size();child++){
                 // skip unconnected child
                 if(!graph[parent][child])
                     continue;
