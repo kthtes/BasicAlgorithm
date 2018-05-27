@@ -60,16 +60,50 @@ vector<int> bubbleSort(const vector<int>& array){
     return res;
 }
 
+void _merge(vector<int>& array, int left, int mid, int right){
+    if(left>mid || mid+1>right)
+        return;
+    // merge the two arrays: [left, mid] and [mid+1, right]
+    vector<int> temp;
+    int i=left; // i<=mid
+    int j=mid+1; // j<=right
+    // main loop
+    while(i<=mid && j<=right){
+        if(array[i]<array[j]){
+            temp.push_back(array[i]);
+            i++;
+        }else{
+            temp.push_back(array[j]);
+            j++;
+        }
+    }
+    // if [i] or [j] are used up
+    if(i>mid){
+        temp.insert(temp.end(), array.begin()+j, array.begin()+right+1);
+    }else{
+        temp.insert(temp.end(), array.begin()+i, array.begin()+mid+1);
+    }
+    // write back
+    std::copy(temp.begin(), temp.end(), array.begin()+left);
+}
+void _mergeSort(vector<int>& array, int left, int right){
+    if(left>=right)
+        return;
+    int mid=(left+right)/2;
+    _mergeSort(array, left, mid);
+    _mergeSort(array, mid+1, right);
+    _merge(array, left, mid, right);
+}
 vector<int> mergeSort(const vector<int>& array){
     vector<int> res(array);
-
+    _mergeSort(res, 0, res.size()-1);
     return res;
 }
 
 vector<int> countingSort(const vector<int>& array){
-    vector<int> res(array);
+    vector<int> res;
     if(!array.size())
-        return res;
+        return vector<int>(array);
     // get max and min value, to determine the size of the result array and counter array
     int min=array[0], max=array[0];
     std::for_each(array.begin(), array.end(), [&min,&max](int a){
@@ -112,6 +146,7 @@ std::ostream& operator<< (std::ostream& out, const std::vector<T>& v) {
 int main()
 {
     vector<int> array={5,4,3,1,2,9,8,7,6};
+    cout<<"===== original array ====="<<endl<<array<<endl<<endl;
 
     cout<<"insert sort:"<<endl<<insertSort(array)<<endl<<endl;
 
